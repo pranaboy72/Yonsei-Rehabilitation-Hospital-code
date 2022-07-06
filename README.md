@@ -4,4 +4,5 @@
 putty 10.241.29.108 or raspberrypi.local
 
 id: pi
-password: raspberrypi
+password: raspberry
+
