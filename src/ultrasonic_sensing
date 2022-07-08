@@ -3,8 +3,8 @@
 #include <softPwm.h>
 #include <math.h>
 
-#define trigger 13  //초음파 내보냄 출력, 숫자는 핀번호
-#define echo 14    //초음파 받음 입력, 숫자는 핀번호
+#define trigger 21  //초음파 내보냄 출력, 숫자는 핀번호
+#define echo 20    //초음파 받음 입력, 숫자는 핀번호
 
 unsigned int start_time;
 unsigned int end_time;
