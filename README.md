@@ -8,7 +8,9 @@ password: raspberry
 
 ## Video Streaming
 
-1. Type python3 rpi_camera_surveillance_system.py on the terminal
+1. Type 
+'''python3 rpi_camera_surveillance_system.py on the terminal'''
+
 2. Access to 10.241.29.108:8000
 
 
