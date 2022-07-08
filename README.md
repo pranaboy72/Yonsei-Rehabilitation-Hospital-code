@@ -12,11 +12,11 @@ password: raspberry
 ```
 python3 rpi_camera_surveillance_system.py
 ```   
-on the terminal   
+on the terminal      
    
 [Code Reference]: > https://randomnerdtutorials.com/video-streaming-with-raspberry-pi-camera/
    
-2. Access to 10.241.29.108:8000
+   2. Access to 10.241.29.108:8000
 
 
 ## Nano Editor 
