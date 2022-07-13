@@ -4,14 +4,14 @@ import time
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
 
-TRIG=20
-ECHO=21
-TRIG1=23
-ECHO1=24
-TRIG2=19
-ECHO2=13
-TRIG3=5
-ECHO3=6
+TRIG1=20
+ECHO1=21
+TRIG2=23
+ECHO2=24
+TRIG3=19
+ECHO3=13
+TRIG4=5
+ECHO4=6
 
 print("Distance Measurement in Progress")
 GPIO.setup(TRIG1.GPIO.OUT)
