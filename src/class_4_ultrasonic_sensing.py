@@ -43,7 +43,7 @@ class Sensor:
     print(f"Distance Sensor {num}: {distance}","cm")
  
 try:
-    i=1
+    i=1     # if f_string works, use f_string instead of if for simplicity
     while 1:
       i=i%4
       if i == 1:
