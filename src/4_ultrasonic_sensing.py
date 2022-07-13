@@ -43,4 +43,4 @@ for i in range(4):
   distance = round(distance, 2)
   print(f"Distance Sensor {i+1}: {distance}","cm")
 
-GPIO.cleanup()
+GPIO.cleanup()    #GPIO clean up: all designated GPIO numbers are cleaned up. Use this before you end up the code
