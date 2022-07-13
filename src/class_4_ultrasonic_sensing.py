@@ -1,4 +1,4 @@
-import RPI.GPIO as GPIO
+import RPi.GPIO as GPIO
 import time
 
 GPIO.setmode(GPIO.BCM)
@@ -21,8 +21,8 @@ class Sensor:
     
   def distance(self):
     print("Distance Measurement in Progress")
-    GPIO.setup(self.trig.GPIO.OUT)
-    GPIO.setup(self.echo.GPIO.IN)
+    GPIO.setup(self.trig, GPIO.OUT)
+    GPIO.setup(self.echo, GPIO.IN)
     GPIO.output(self.trig, False)
     
     print(f"Waiting For Sensor {self.num} To Send Signal")
@@ -49,19 +49,19 @@ try:
       if i == 1:
         sensor = Sensor(TRIG1, ECHO1, i)
         distance = sensor.distance()
-        i++
+        i+=1
       if i == 2:
         sensor = Sensor(TRIG2, ECHO2, i)
         distance = sensor.distance()
-        i++
+        i+=1
       if i == 3:
         sensor = Sensor(TRIG3, ECHO3, i)
         distance = sensor.distance()
-        i++
+        i+=1
       if i == 0:
         sensor = Sensor(TRIG4, ECHO4, i)
         distance = sensor.distance()
-        i++
+        i+=1
 
 except KeyboardInterrupt:   # if there is a keyboard interrupt such as ctrl+c, stop the code with cleaning up the gpio
     print ('KeyboardInterrupt exception is caught')
