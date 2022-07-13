@@ -63,6 +63,6 @@ try:
         distance = sensor.distance()
         i++
 
-except KeyboardInterrupt:
+except KeyboardInterrupt:   # if there is a keyboard interrupt such as ctrl+c, stop the code with cleaning up the gpio
     print ('KeyboardInterrupt exception is caught')
     GPIO.cleanup()
