@@ -42,24 +42,27 @@ class Sensor:
     distance = round(distance, 2)
     print(f"Distance Sensor {num}: {distance}","cm")
  
-    GPIO.cleanup()
+try:
+    i=1
+    while 1:
+      i=i%4
+      if i == 1:
+        sensor = Sensor(TRIG1, ECHO1, i)
+        distance = sensor.distance()
+        i++
+      if i == 2:
+        sensor = Sensor(TRIG2, ECHO2, i)
+        distance = sensor.distance()
+        i++
+      if i == 3:
+        sensor = Sensor(TRIG3, ECHO3, i)
+        distance = sensor.distance()
+        i++
+      if i == 0:
+        sensor = Sensor(TRIG4, ECHO4, i)
+        distance = sensor.distance()
+        i++
 
-i=1
-while 1:
-  i=i%4
-  if i == 1:
-    sensor = Sensor(TRIG1, ECHO1, i)
-    distance = sensor.distance()
-    i++
-  if i == 2:
-    sensor = Sensor(TRIG2, ECHO2, i)
-    distance = sensor.distance()
-    i++
-  if i == 3:
-    sensor = Sensor(TRIG3, ECHO3, i)
-    distance = sensor.distance()
-    i++
-  if i == 0:
-    sensor = Sensor(TRIG4, ECHO4, i)
-    distance = sensor.distance()
-    i++
+except KeyboardInterrupt:
+    print ('KeyboardInterrupt exception is caught')
+    GPIO.cleanup()
