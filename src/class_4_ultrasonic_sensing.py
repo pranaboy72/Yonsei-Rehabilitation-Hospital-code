@@ -31,6 +31,8 @@ class Sensor:
     time.sleep(0.00001)
     GPIO.output(self.trig, False)
     
+    pulse_start = 0
+    pulse_end = 0
     print("Reading Sensor")
     while GPIO.input(self.echo)==0:
       pulse_start = time.time()
@@ -40,7 +42,7 @@ class Sensor:
     pulse_duration = pulse_end - pulse_start
     distance = pulse_duration * 17150
     distance = round(distance, 2)
-    print(f"Distance Sensor {num}: {distance}","cm")
+    print(f"Distance Sensor {self.num}: {distance}","cm")
  
 try:
     i=1     # if f_string works, use f_string instead of if for simplicity
@@ -48,19 +50,19 @@ try:
       i=i%4
       if i == 1:
         sensor = Sensor(TRIG1, ECHO1, i)
-        distance = sensor.distance()
+        sensor.distance()
         i+=1
       if i == 2:
         sensor = Sensor(TRIG2, ECHO2, i)
-        distance = sensor.distance()
+        sensor.distance()
         i+=1
       if i == 3:
         sensor = Sensor(TRIG3, ECHO3, i)
-        distance = sensor.distance()
+        sensor.distance()
         i+=1
       if i == 0:
         sensor = Sensor(TRIG4, ECHO4, i)
-        distance = sensor.distance()
+        sensor.distance()
         i+=1
 
 except KeyboardInterrupt:   # if there is a keyboard interrupt such as ctrl+c, stop the code with cleaning up the gpio
