@@ -18,6 +18,7 @@ on the terminal
    
    2. Access to 10.241.29.108:8000
 
+[Connecting Ultrasonic Sensor]: > https://www.youtube.com/watch?v=3wObKw8G9ys
 
 ## Nano Editor 
 sudo nano /etc/profile
