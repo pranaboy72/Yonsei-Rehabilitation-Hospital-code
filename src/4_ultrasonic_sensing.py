@@ -14,7 +14,7 @@ TRIG4=5
 ECHO4=6
 
 print("Distance Measurement in Progress")
-GPIO.setup(TRIG1.GPIO.OUT)
+GPIO.setup(TRIG1.GPIO,OUT)
 GPIO.setup(ECHO1.GPIO,IN)
 GPIO.setup(TRIG2.GPIO,OUT)
 GPIO.setup(ECHO2.GPIO,IN)
