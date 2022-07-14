@@ -10,8 +10,11 @@ TRIG2=23
 ECHO2=24
 TRIG3=19
 ECHO3=13
-TRIG4=5
-ECHO4=6
+BUZZ1=5
+BUZZ2=6
+BUZZ3=26
+#TRIG4=5
+#ECHO4=6
 
 print("Distance Measurement in Progress")
 GPIO.setup(TRIG1,GPIO.OUT)
@@ -20,17 +23,35 @@ GPIO.setup(TRIG2,GPIO.OUT)
 GPIO.setup(ECHO2,GPIO.IN)
 GPIO.setup(TRIG3,GPIO.OUT)
 GPIO.setup(ECHO3,GPIO.IN)
-GPIO.setup(TRIG4,GPIO.OUT)
-GPIO.setup(ECHO4,GPIO.IN)
+GPIO.setup(BUZZ, GPIO.OUT)
+#GPIO.setup(TRIG4,GPIO.OUT)
+#GPIO.setup(ECHO4,GPIO.IN)
 
 GPIO.output(TRIG1, False)
 GPIO.output(TRIG2, False)
 GPIO.output(TRIG3, False)
-GPIO.output(TRIG4, False)
+#GPIO.output(TRIG4, False)
 
 print(f"Waiting For Sensor To Send Signal")
 time.sleep(2)
 
+def buzzer(buz):
+  
+
+def buzzer(buz, per):
+  GPIO.output(buz, GPIO.HIGH)
+  sleep(per)
+  GPIO.output(buz, GPIO.LOW)
+  sleep(per)
+
+def buzzer_distance(buz, dis):
+  if dis<20:
+    buzzer(buz, 1)
+  elif dis <10:
+    buzzer(buz, 0.5)
+  elif dis < 5:
+    buzzer(buz, 0.1)
+  
 def get_distance(trig, echo):
   if GPIO.input(echo):
     return (100)
@@ -68,7 +89,7 @@ def get_distance(trig, echo):
 try:
   i=1
   while 1:
-    i=i%4
+    i=i%3
       
     if i==1:
       distance = get_distance(TRIG1, ECHO1)
@@ -82,17 +103,17 @@ try:
       time.sleep(0.4)
       i+=1
       
-    elif i==3:
+    elif i==0:
       distance = get_distance(TRIG3, ECHO3)
       print(f"Distance : {distance} cm")
       time.sleep(0.4)
       i+=1
       
-    elif i==0:
+    '''elif i==0:
       distance = get_distance(TRIG4, ECHO4)
       print(f"Distance : {distance} cm")
       time.sleep(0.4)
-      i+=1
+      i+=1'''
       
       
 except KeyboardInterrupt:
