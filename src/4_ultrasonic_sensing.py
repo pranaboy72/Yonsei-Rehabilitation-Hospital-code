@@ -48,8 +48,8 @@ try:
       time.sleep(2)
       i+=1
       
-   elif i==2:
-    print(f"Waiting For Sensor {i} To Send Signal")
+    elif i==2:
+      print(f"Waiting For Sensor {i} To Send Signal")
       time.sleep(0.2)
       GPIO.output(TRIG2, True) # if f_string doesn't work, type 1~4 Trig and Echo manually
       time.sleep(0.00001)
@@ -67,7 +67,7 @@ try:
       i+=1
       
     elif i==3:
-    print(f"Waiting For Sensor {i} To Send Signal")
+      print(f"Waiting For Sensor {i} To Send Signal")
       time.sleep(0.2)
       GPIO.output(TRIG3, True) # if f_string doesn't work, type 1~4 Trig and Echo manually
       time.sleep(0.00001)
@@ -85,7 +85,7 @@ try:
       i+=1
       
     elif i==0:
-    print(f"Waiting For Sensor {i+4} To Send Signal")
+      print(f"Waiting For Sensor {i+4} To Send Signal")
       time.sleep(0.2)
       GPIO.output(TRIG4, True) # if f_string doesn't work, type 1~4 Trig and Echo manually
       time.sleep(0.00001)
