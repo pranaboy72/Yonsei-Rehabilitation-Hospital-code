@@ -1,4 +1,4 @@
-import RPI.GPIO as GPIO
+import RPi.GPIO as GPIO
 import time
 
 GPIO.setmode(GPIO.BCM)
@@ -15,13 +15,13 @@ ECHO4=6
 
 print("Distance Measurement in Progress")
 GPIO.setup(TRIG1.GPIO.OUT)
-GPIO.setup(ECHO1.GPIO.IN)
-GPIO.setup(TRIG2.GPIO.OUT)
-GPIO.setup(ECHO2.GPIO.IN)
-GPIO.setup(TRIG3.GPIO.OUT)
-GPIO.setup(ECHO3.GPIO.IN)
-GPIO.setup(TRIG4.GPIO.OUT)
-GPIO.setup(ECHO4.GPIO.IN)
+GPIO.setup(ECHO1.GPIO,IN)
+GPIO.setup(TRIG2.GPIO,OUT)
+GPIO.setup(ECHO2.GPIO,IN)
+GPIO.setup(TRIG3.GPIO,OUT)
+GPIO.setup(ECHO3.GPIO,IN)
+GPIO.setup(TRIG4.GPIO,OUT)
+GPIO.setup(ECHO4.GPIO,IN)
 GPIO.output(TRIG1, False)
 GPIO.output(TRIG2, False)
 GPIO.output(TRIG3, False)
