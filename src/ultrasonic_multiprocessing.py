@@ -1,6 +1,6 @@
 import RPi.GPIO as GPIO
 import time
-from multiprocessing import Process # "sudo pip3 install multiprocessing" ¶Ç´Â "sudo pip install multiprocessing" ÀÔ·ÂÇØ multiprocessing ¸ğµâ ¼³Ä¡
+from multiprocessing import Process # "sudo pip3 install multiprocessing" ë˜ëŠ” "sudo pip install multiprocessing" ì…ë ¥í•´ multiprocessing ëª¨ë“ˆ ì„¤ì¹˜
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
@@ -90,13 +90,13 @@ def get_distance(trig, echo):
   distance = (pulse_end - pulse_start) * 34300 / 2
   return (distance)
 
-"""ÃÊÀ½ÆÄ ¼¾¼­ 3°³ ÀÛµ¿ÀÌ µ¿½Ã¿¡ ÀÛµ¿ÇÏ°Ô ÇÏ±â À§ÇØ¼­
-while¹® ´ë½Å multiprocessingÀÇ Process »ç¿ë"""" 
+"""ì´ˆìŒíŒŒ ì„¼ì„œ 3ê°œ ì‘ë™ì´ ë™ì‹œì— ì‘ë™í•˜ê²Œ í•˜ê¸° ìœ„í•´ì„œ
+whileë¬¸ ëŒ€ì‹  multiprocessingì˜ Process ì‚¬ìš©"""" 
 
 def ultrasonic1:
     distance = get_distance(TRIG1, ECHO1)
-    print(f"Distance1 : {distance} cm")
-    buzzer_distance(BUZ1, distance)
+    print(f"Distance2 : {distance} cm")
+    buzzer_distance(BUZZ2, distance)
     time.sleep(0.4)
       
 def ultrasonic2:
@@ -111,7 +111,7 @@ def ultrasonic3:
     buzzer_distance(BUZZ3, distance)
     time.sleep(0.4)
 
-# °¢ ÇÁ·Î¼¼½º µ¿½Ã¿¡ ½ÇÇà
+# ê° í”„ë¡œì„¸ìŠ¤ ë™ì‹œì— ì‹¤í–‰
 if __name__=='__main__':
     p_1 = Process(target=ultrasonic1)
     p_2 = Process(target=ultrasonic2)
