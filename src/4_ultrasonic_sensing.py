@@ -38,8 +38,10 @@ time.sleep(2)
 
 def buzzer(buz, per):
   GPIO.output(buz, GPIO.HIGH)
+  print("beep")
   sleep(per)
   GPIO.output(buz, GPIO.LOW)
+  print("stop beep")
   sleep(per)
 
 def buzzer_distance(buz, dis):
@@ -92,7 +94,11 @@ try:
     if i==1:
       distance = get_distance(TRIG1, ECHO1)
       print(f"Distance : {distance} cm")
-      buzzer_distance(BUZ1, distance)
+      GPIO.output(BUZZ1, GPIO.HIGH)
+      time.sleep(0.5)
+      GPIO.output(BUZZ1, GPIO.LOW)
+      
+      #buzzer_distance(BUZ1, distance)
       time.sleep(0.4)
       i+=1
       
