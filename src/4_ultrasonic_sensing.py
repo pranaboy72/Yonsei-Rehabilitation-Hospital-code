@@ -23,7 +23,9 @@ GPIO.setup(TRIG2,GPIO.OUT)
 GPIO.setup(ECHO2,GPIO.IN)
 GPIO.setup(TRIG3,GPIO.OUT)
 GPIO.setup(ECHO3,GPIO.IN)
-GPIO.setup(BUZZ, GPIO.OUT)
+GPIO.setup(BUZZ1, GPIO.OUT)
+GPIO.setup(BUZZ2, GPIO.OUT)
+GPIO.setup(BUZZ3, GPIO.OUT)
 #GPIO.setup(TRIG4,GPIO.OUT)
 #GPIO.setup(ECHO4,GPIO.IN)
 
@@ -39,10 +41,10 @@ time.sleep(2)
 def buzzer(buz, per):
   GPIO.output(buz, GPIO.HIGH)
   print("beep")
-  sleep(per)
+  time.sleep(per)
   GPIO.output(buz, GPIO.LOW)
   print("stop beep")
-  sleep(per)
+  time.sleep(per)
 
 def buzzer_distance(buz, dis):
   if dis<20:
