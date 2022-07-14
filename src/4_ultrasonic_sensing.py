@@ -38,6 +38,13 @@ print(f"Waiting For Sensor To Send Signal")
 time.sleep(2)
  
 
+def trans_buzz(buz, per):
+  pwm = GPIO.PWM(buz, 262)
+  pwm.start(50.0)
+  time.sleep(1.5)
+  
+  pwm.stop()
+ 
 def buzzer(buz, per):
   GPIO.output(buz, GPIO.HIGH)
   print("beep")
@@ -48,11 +55,11 @@ def buzzer(buz, per):
 
 def buzzer_distance(buz, dis):
   if dis<20:
-    buzzer(buz, 1)
+    trans_buzz(buz, 1)
   elif dis <10:
-    buzzer(buz, 0.5)
+    trans_buzz(buz, 0.5)
   elif dis < 5:
-    buzzer(buz, 0.1)
+    transbuzz(buz, 0.1)
   
 def get_distance(trig, echo):
   if GPIO.input(echo):
@@ -107,14 +114,14 @@ try:
     elif i==2:
       distance = get_distance(TRIG2, ECHO2)
       print(f"Distance : {distance} cm")
-      buzzer_distance(BUZ2, distance)
+      buzzer_distance(BUZZ2, distance)
       time.sleep(0.4)
       i+=1
       
     elif i==0:
       distance = get_distance(TRIG3, ECHO3)
       print(f"Distance : {distance} cm")
-      buzzer_distance(BUZ3, distance)
+      buzzer_distance(BUZZ3, distance)
       time.sleep(0.4)
       i+=1
       
