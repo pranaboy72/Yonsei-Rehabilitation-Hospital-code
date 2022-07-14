@@ -34,9 +34,7 @@ GPIO.output(TRIG3, False)
 
 print(f"Waiting For Sensor To Send Signal")
 time.sleep(2)
-
-def buzzer(buz):
-  
+ 
 
 def buzzer(buz, per):
   GPIO.output(buz, GPIO.HIGH)
@@ -94,18 +92,21 @@ try:
     if i==1:
       distance = get_distance(TRIG1, ECHO1)
       print(f"Distance : {distance} cm")
+      buzzer_distance(BUZ1, distance)
       time.sleep(0.4)
       i+=1
       
     elif i==2:
       distance = get_distance(TRIG2, ECHO2)
       print(f"Distance : {distance} cm")
+      buzzer_distance(BUZ2, distance)
       time.sleep(0.4)
       i+=1
       
     elif i==0:
       distance = get_distance(TRIG3, ECHO3)
       print(f"Distance : {distance} cm")
+      buzzer_distance(BUZ3, distance)
       time.sleep(0.4)
       i+=1
       
