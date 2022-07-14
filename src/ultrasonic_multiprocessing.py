@@ -39,21 +39,13 @@ def trans_buzz(buz, per):
   pwm.start(50.0)
   time.sleep(per)  
   pwm.stop()
- 
-def buzzer(buz, per):
-  GPIO.output(buz, GPIO.HIGH)
-  print("beep")
-  time.sleep(per)
-  GPIO.output(buz, GPIO.LOW)
-  print("stop beep")
-  time.sleep(per)
 
 def buzzer_distance(buz, dis):
   if 10 <= dis < 20:
     trans_buzz(buz, 1)
-  elif 5 <= dis< 10:
+  elif 5 <= dis < 10:
     trans_buzz(buz, 1.5)
-  else dis <5:
+  else dis < 5:
     transbuzz(buz, 2)
   
 def get_distance(trig, echo):
@@ -95,7 +87,7 @@ while문 대신 multiprocessing의 Process 사용""""
 
 def ultrasonic1:
     distance = get_distance(TRIG1, ECHO1)
-    print(f"Distance2 : {distance} cm")
+    print(f"Distance1 : {distance} cm")
     buzzer_distance(BUZZ2, distance)
     time.sleep(0.4)
       
