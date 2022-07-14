@@ -41,8 +41,7 @@ time.sleep(2)
 def trans_buzz(buz, per):
   pwm = GPIO.PWM(buz, 262)
   pwm.start(50.0)
-  time.sleep(1.5)
-  
+  time.sleep(per)  
   pwm.stop()
  
 def buzzer(buz, per):
@@ -54,12 +53,12 @@ def buzzer(buz, per):
   time.sleep(per)
 
 def buzzer_distance(buz, dis):
-  if dis<20:
+  if 10 <= dis < 20:
     trans_buzz(buz, 1)
-  elif dis <10:
-    trans_buzz(buz, 0.5)
-  elif dis < 5:
-    transbuzz(buz, 0.1)
+  elif 5 <= dis< 10:
+    trans_buzz(buz, 1.5)
+  else dis <5:
+    transbuzz(buz, 2)
   
 def get_distance(trig, echo):
   if GPIO.input(echo):
