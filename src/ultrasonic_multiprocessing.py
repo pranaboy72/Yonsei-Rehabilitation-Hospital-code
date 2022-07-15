@@ -104,14 +104,14 @@ def ultrasonic3:
     time.sleep(0.4)
 
 # 각 프로세스 동시에 실행
-if __name__=='__main__':
-    p_1 = Process(target=ultrasonic1)
-    p_2 = Process(target=ultrasonic2)
-    p_3 = Process(target=ultrasonic3)
-    while True:
-        p_1.start()
-        p_2.start()
-        p_3.start()
+try:
+  p_1 = Process(target=ultrasonic1)
+  p_2 = Process(target=ultrasonic2)
+  p_3 = Process(target=ultrasonic3)
+  while True:
+      p_1.start()
+      p_2.start()
+      p_3.start()
         
 except KeyboardInterrupt:
   print ("KeyboardInterrupt exception is caught")
