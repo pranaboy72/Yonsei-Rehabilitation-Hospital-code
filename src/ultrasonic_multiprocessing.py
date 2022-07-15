@@ -119,4 +119,7 @@ try:
         
 except KeyboardInterrupt:
   print ("KeyboardInterrupt exception is caught")
+  #p_1.join()
+  #P_2.join()
+  #p_3.join()
   GPIO.cleanup()    #GPIO clean up: all designated GPIO numbers are cleaned up. Use this before you end up the code
