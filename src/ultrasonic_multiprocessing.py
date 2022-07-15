@@ -89,7 +89,7 @@ def ultrasonic1():
  while True:
     distance = get_distance(TRIG1, ECHO1)
     print(f"Distance1 : {distance} cm")
-    buzzer_distance(BUZZ2, distance)
+    buzzer_distance(BUZZ1, distance)
     time.sleep(0.4)
       
 def ultrasonic2():
