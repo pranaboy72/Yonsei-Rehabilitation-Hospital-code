@@ -1,6 +1,6 @@
 import RPi.GPIO as GPIO
 import time
-from multiprocessing import Process # "sudo pip3 install multiprocessing" 또는 "sudo pip install multiprocessing" 입력해 multiprocessing 모듈 설치
+from multiprocessing import Process 
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
@@ -46,7 +46,7 @@ def buzzer_distance(buz, dis):
   elif 5 <= dis < 10:
     trans_buzz(buz, 1.5)
   else dis < 5:
-    transbuzz(buz, 2)
+    trans_buzz(buz, 2)
   
 def get_distance(trig, echo):
   if GPIO.input(echo):
@@ -85,19 +85,22 @@ def get_distance(trig, echo):
 """초음파 센서 3개 작동이 동시에 작동하게 하기 위해서
 while문 대신 multiprocessing의 Process 사용"""" 
 
-def ultrasonic1:
+def ultrasonic1():
+ while True:
     distance = get_distance(TRIG1, ECHO1)
     print(f"Distance1 : {distance} cm")
     buzzer_distance(BUZZ2, distance)
     time.sleep(0.4)
       
-def ultrasonic2:
+def ultrasonic2():
+ while True:
     distance = get_distance(TRIG2, ECHO2)
     print(f"Distance2 : {distance} cm")
     buzzer_distance(BUZZ2, distance)
     time.sleep(0.4)
       
-def ultrasonic3:
+def ultrasonic3():
+ while True:
     distance = get_distance(TRIG3, ECHO3)
     print(f"Distance3 : {distance} cm")
     buzzer_distance(BUZZ3, distance)
@@ -105,13 +108,14 @@ def ultrasonic3:
 
 # 각 프로세스 동시에 실행
 try:
+ if __name__=='__main__':
   p_1 = Process(target=ultrasonic1)
   p_2 = Process(target=ultrasonic2)
   p_3 = Process(target=ultrasonic3)
-  while True:
-      p_1.start()
-      p_2.start()
-      p_3.start()
+ 
+  p_1.start()
+  p_2.start()
+  p_3.start()
         
 except KeyboardInterrupt:
   print ("KeyboardInterrupt exception is caught")
