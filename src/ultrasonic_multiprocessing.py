@@ -85,7 +85,7 @@ def get_distance(trig, echo):
   distance = (pulse_end - pulse_start) * 34300 / 2
   return (distance)
 
-def ultrasonic1():
+def ultrasonic1(power):
   while True: 
    if GPIO.input(TOUCH) == True:
     power =0
@@ -95,7 +95,7 @@ def ultrasonic1():
    buzzer_distance(BUZZ1, distance)
    time.sleep(0.4)
       
-def ultrasonic2():
+def ultrasonic2(power):
   while True: 
    if GPIO.input(TOUCH) == True:
     break
@@ -104,7 +104,7 @@ def ultrasonic2():
    buzzer_distance(BUZZ2, distance)
    time.sleep(0.4)
       
-def ultrasonic3():
+def ultrasonic3(power):
   while True: 
    if GPIO.input(TOUCH) == True:
     break
@@ -156,6 +156,6 @@ try:
 except KeyboardInterrupt:
   print ("KeyboardInterrupt exception is caught")
   p_1.join()
-  P_2.join()
+  p_2.join()
   p_3.join()
   GPIO.cleanup()    #GPIO clean up: all designated GPIO numbers are cleaned up. Use this before you end up the code
