@@ -114,7 +114,7 @@ def main(power):
    p_3.start()
    
    p_1.join()
-   P_2.join()
+   p_2.join()
    p_3.join()
 
    time.sleep(0.5)
@@ -122,7 +122,7 @@ def main(power):
   elif GPIO.input(TOUCH) == True and power == 1:
    power = 0
    p_1.join()
-   P_2.join()
+   p_2.join()
    p_3.join()
    
    time.sleep(0.5)
@@ -132,13 +132,17 @@ def main(power):
    p_2.start()
    p_3.start()
    
+   p_1.join()
+   p_2.join()
+   p_3.join()
+   
    time.sleep(0.5)   
  
 try:
  if __name__=='__main__':
   power =0
   while True:
-   main() 
+   main(power) 
 
 except KeyboardInterrupt:
   print ("KeyboardInterrupt exception is caught")
