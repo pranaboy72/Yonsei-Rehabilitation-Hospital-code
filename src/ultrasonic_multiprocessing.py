@@ -14,6 +14,7 @@ ECHO3=13
 BUZZ1=5
 BUZZ2=6
 BUZZ3=26
+TOUCH = 16
 
 print("Distance Measurement in Progress")
 GPIO.setup(TRIG1,GPIO.OUT)
@@ -25,6 +26,7 @@ GPIO.setup(ECHO3,GPIO.IN)
 GPIO.setup(BUZZ1, GPIO.OUT)
 GPIO.setup(BUZZ2, GPIO.OUT)
 GPIO.setup(BUZZ3, GPIO.OUT)
+GPIO.setup(TOUCH, GPIO.IN, pull_up_down = GPIO.PUD_UP)
 
 GPIO.output(TRIG1, False)
 GPIO.output(TRIG2, False)
@@ -107,19 +109,29 @@ def ultrasonic3():
     time.sleep(0.4)
 
 # 각 프로세스 동시에 실행
+power = 0
 try:
- if __name__=='__main__':
-  p_1 = Process(target=ultrasonic1)
-  p_2 = Process(target=ultrasonic2)
-  p_3 = Process(target=ultrasonic3)
- 
-  p_1.start()
-  p_2.start()
-  p_3.start()
-        
-except KeyboardInterrupt:
+ while True:
+  if GPIO.input(TOUCH) == True && power == 0:
+   power = 1
+   if __name__=='__main__':
+    print("Touch Detected\nPower on")
+    p_1 = Process(target=ultrasonic1)
+    p_2 = Process(target=ultrasonic2)
+    p_3 = Process(target=ultrasonic3)
+
+    p_1.start()
+    p_2.start()
+    p_3.start()
+  elif GPIO.input(TOUCH) == True && power == 1:
+   print("Touch Detected\nPower off")
+   p_1.join()
+   P_2.join()
+   p_3.join()
+
+ except KeyboardInterrupt:
   print ("KeyboardInterrupt exception is caught")
-  #p_1.join()
-  #P_2.join()
-  #p_3.join()
+  p_1.join()
+  P_2.join()
+  p_3.join()
   GPIO.cleanup()    #GPIO clean up: all designated GPIO numbers are cleaned up. Use this before you end up the code
