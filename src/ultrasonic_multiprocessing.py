@@ -15,6 +15,7 @@ BUZZ1=5
 BUZZ2=6
 BUZZ3=26
 TOUCH = 16
+power = 0
 
 print("Distance Measurement in Progress")
 GPIO.setup(TRIG1,GPIO.OUT)
@@ -85,64 +86,72 @@ def get_distance(trig, echo):
   return (distance)
 
 def ultrasonic1():
+  while True: 
+   if GPIO.input(TOUCH) == True:
+    power =0
+    break
    distance = get_distance(TRIG1, ECHO1)
    print(f"Distance1 : {distance} cm")
    buzzer_distance(BUZZ1, distance)
    time.sleep(0.4)
       
 def ultrasonic2():
+  while True: 
+   if GPIO.input(TOUCH) == True:
+    break
    distance = get_distance(TRIG2, ECHO2)
    print(f"Distance2 : {distance} cm")
    buzzer_distance(BUZZ2, distance)
    time.sleep(0.4)
       
 def ultrasonic3():
+  while True: 
+   if GPIO.input(TOUCH) == True:
+    break
    distance = get_distance(TRIG3, ECHO3)
    print(f"Distance3 : {distance} cm")
    buzzer_distance(BUZZ3, distance)
    time.sleep(0.4)
 
 def main(power):
-  if GPIO.input(TOUCH) == True and power == 0:
-   power = 1
-   p_1 = Process(target=ultrasonic1)
-   p_2 = Process(target=ultrasonic2)
-   p_3 = Process(target=ultrasonic3)
+  while True:
+   if GPIO.input(TOUCH) == True and power == 0:
+    time.sleep(1)
+    power = 1
+    p_1 = Process(target=ultrasonic1(power,))
+    p_2 = Process(target=ultrasonic2(power,))
+    p_3 = Process(target=ultrasonic3(power,))
 
-   p_1.start()
-   p_2.start()
-   p_3.start()
-   
-   p_1.join()
-   p_2.join()
-   p_3.join()
+    p_1.start()
+    p_2.start()
+    p_3.start()
+    
+    p_1.join()
+    p_2.join()
+    p_3.join()
 
-   time.sleep(0.5)
+    time.sleep(0.5)
+  
+  else:
+   continue
+'''
+   elif GPIO.input(TOUCH) == True and power == 1:
+    power = 0
+    p_1.join()
+    p_2.join()
+    p_3.join()
 
-  elif GPIO.input(TOUCH) == True and power == 1:
-   power = 0
-   p_1.join()
-   p_2.join()
-   p_3.join()
-   
-   time.sleep(0.5)
-   
-  elif GPIO.input(TOUCH) == False and power == 1:
-   p_1.start()
-   p_2.start()
-   p_3.start()
-   
-   p_1.join()
-   p_2.join()
-   p_3.join()
-   
-   time.sleep(0.5)   
- 
+    time.sleep(0.5)
+
+   elif GPIO.input(TOUCH) == False and power == 1:
+    continue
+
+    time.sleep(0.5)   
+ '''
 try:
  if __name__=='__main__':
   power =0
-  while True:
-   main(power) 
+  main(power) 
 
 except KeyboardInterrupt:
   print ("KeyboardInterrupt exception is caught")
