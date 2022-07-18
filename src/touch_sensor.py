@@ -4,8 +4,8 @@ import random
 
 import RPi.GPIO as GPIO
 
-TOUCH = (gpio num)
 GPIO.setmode(GPIO.BCM)
+TOUCH = 16
 GPIO.setup(TOUCH, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 while True:
@@ -13,6 +13,6 @@ while True:
     print("Touch Detected")
     time.sleep(0.5)
     
-  if GPIO.input(TOUCH) == True:
+  if GPIO.input(TOUCH) == False:
     print("No Touch Detected")
     time.sleep(0.5)
