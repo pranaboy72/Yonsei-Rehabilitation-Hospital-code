@@ -47,7 +47,7 @@ def buzzer_distance(buz, dis):
     trans_buzz(buz, 1)
   elif 5 <= dis < 10:
     trans_buzz(buz, 1.5)
-  else dis < 5:
+  elif dis < 5:
     trans_buzz(buz, 2)
   
 def get_distance(trig, echo):
@@ -84,9 +84,6 @@ def get_distance(trig, echo):
   distance = (pulse_end - pulse_start) * 34300 / 2
   return (distance)
 
-"""초음파 센서 3개 작동이 동시에 작동하게 하기 위해서
-while문 대신 multiprocessing의 Process 사용"""" 
-
 def ultrasonic1():
    distance = get_distance(TRIG1, ECHO1)
    print(f"Distance1 : {distance} cm")
@@ -105,41 +102,41 @@ def ultrasonic3():
    buzzer_distance(BUZZ3, distance)
    time.sleep(0.4)
 
-def main():
-  if GPIO.input(TOUCH) == True && power == 0:
+def main(power):
+  if GPIO.input(TOUCH) == True and power == 0:
    power = 1
-    print("Touch Detected\nPower on")
-    p_1 = Process(target=ultrasonic1)
-    p_2 = Process(target=ultrasonic2)
-    p_3 = Process(target=ultrasonic3)
-  
-    p_1.start()
-    p_2.start()
-    p_3.start()
-    
-    time.sleep(0.5)
-    continue
+   p_1 = Process(target=ultrasonic1)
+   p_2 = Process(target=ultrasonic2)
+   p_3 = Process(target=ultrasonic3)
 
-  elif GPIO.input(TOUCH) == True && power == 1:
+   p_1.start()
+   p_2.start()
+   p_3.start()
+   
+   p_1.join()
+   P_2.join()
+   p_3.join()
+
+   time.sleep(0.5)
+
+  elif GPIO.input(TOUCH) == True and power == 1:
    power = 0
-   print("Touch Detected\nPower off")
    p_1.join()
    P_2.join()
    p_3.join()
    
    time.sleep(0.5)
    
-  if power == 1:
+  elif GPIO.input(TOUCH) == False and power == 1:
    p_1.start()
    p_2.start()
    p_3.start()
    
    time.sleep(0.5)   
  
-# 각 프로세스 동시에 실행
-power = 0
 try:
  if __name__=='__main__':
+  power =0
   while True:
    main() 
 
