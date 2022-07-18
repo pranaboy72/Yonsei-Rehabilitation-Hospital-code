@@ -88,48 +88,62 @@ def get_distance(trig, echo):
 while문 대신 multiprocessing의 Process 사용"""" 
 
 def ultrasonic1():
- while True:
-    distance = get_distance(TRIG1, ECHO1)
-    print(f"Distance1 : {distance} cm")
-    buzzer_distance(BUZZ1, distance)
-    time.sleep(0.4)
+   distance = get_distance(TRIG1, ECHO1)
+   print(f"Distance1 : {distance} cm")
+   buzzer_distance(BUZZ1, distance)
+   time.sleep(0.4)
       
 def ultrasonic2():
- while True:
-    distance = get_distance(TRIG2, ECHO2)
-    print(f"Distance2 : {distance} cm")
-    buzzer_distance(BUZZ2, distance)
-    time.sleep(0.4)
+   distance = get_distance(TRIG2, ECHO2)
+   print(f"Distance2 : {distance} cm")
+   buzzer_distance(BUZZ2, distance)
+   time.sleep(0.4)
       
 def ultrasonic3():
- while True:
-    distance = get_distance(TRIG3, ECHO3)
-    print(f"Distance3 : {distance} cm")
-    buzzer_distance(BUZZ3, distance)
-    time.sleep(0.4)
+   distance = get_distance(TRIG3, ECHO3)
+   print(f"Distance3 : {distance} cm")
+   buzzer_distance(BUZZ3, distance)
+   time.sleep(0.4)
 
-# 각 프로세스 동시에 실행
-power = 0
-try:
- while True:
+def main():
   if GPIO.input(TOUCH) == True && power == 0:
    power = 1
-   if __name__=='__main__':
     print("Touch Detected\nPower on")
     p_1 = Process(target=ultrasonic1)
     p_2 = Process(target=ultrasonic2)
     p_3 = Process(target=ultrasonic3)
-
+  
     p_1.start()
     p_2.start()
     p_3.start()
+    
+    time.sleep(0.5)
+    continue
+
   elif GPIO.input(TOUCH) == True && power == 1:
+   power = 0
    print("Touch Detected\nPower off")
    p_1.join()
    P_2.join()
    p_3.join()
+   
+   time.sleep(0.5)
+   
+  if power == 1:
+   p_1.start()
+   p_2.start()
+   p_3.start()
+   
+   time.sleep(0.5)   
+ 
+# 각 프로세스 동시에 실행
+power = 0
+try:
+ if __name__=='__main__':
+  while True:
+   main() 
 
- except KeyboardInterrupt:
+except KeyboardInterrupt:
   print ("KeyboardInterrupt exception is caught")
   p_1.join()
   P_2.join()
