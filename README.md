@@ -20,5 +20,7 @@ on the terminal
 
 [Connecting Ultrasonic Sensor]: > https://www.youtube.com/watch?v=3wObKw8G9ys
 
+[Digital Mentoring]: > https://www.notion.so/5146e1c9f1884b96a272717aad762b47
+
 ## Nano Editor 
 sudo nano /etc/profile
