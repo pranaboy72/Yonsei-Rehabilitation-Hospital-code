@@ -21,6 +21,7 @@ byte meditation = 0;
 // system variables
 long lastReceivedPacket = 0;
 boolean bigPacket = false;
+char stall;
 
 int Speed = 130;  
 
@@ -45,8 +46,8 @@ byte ReadOneByte()
 
 {
   int ByteRead;
-  while(!Serial.available());
-  ByteRead = Serial.read();
+  while(!BT.available());
+  ByteRead = BT.read();
 
 #if DEBUGOUTPUT  
   Serial.print((char)ByteRead);   // echo the same byte out the USB serial (for debug purposes)
@@ -59,12 +60,19 @@ byte ReadOneByte()
 //MAIN LOOP//
 /////////////
 void loop() {
+  stall = Serial.read();
+  if (stall == 'c')  Stop();
   // Look for sync bytes
   if(ReadOneByte() == 170) 
   {
     if(ReadOneByte() == 170) 
     {
         payloadLength = ReadOneByte();
+        if (payloadLength!=4){
+        Serial.print("payloadLength:");
+        Serial.println(payloadLength);
+        delay(500);
+      }
       
         if(payloadLength > 169)                      //Payload length can not be greater than 169
         return;
@@ -86,28 +94,63 @@ void loop() {
 
           for(int i = 0; i < payloadLength; i++) 
           {                                          // Parse the payload
+            if (payloadLength!=4){
+            Serial.print(i);
+            Serial.print(":");
+            Serial.print(payloadData[i]);
+            Serial.print("\t");
+            delay(500);
+          }
           switch (payloadData[i]) 
           {
           case 2:
             i++;            
             poorQuality = payloadData[i];
-            bigPacket = true;            
+            bigPacket = true;
+            if (payloadLength!=4){
+            Serial.print("<case 2>"); 
+            Serial.print("\n");  
+            delay(500);}            
             break;
           case 4:
             i++;
-            attention = payloadData[i];                        
+            attention = payloadData[i]; 
+            if (payloadLength!=4){
+            Serial.print("<case 4>");  
+            Serial.print("\n");   
+            delay(500);}                       
             break;
           case 5:
             i++;
             meditation = payloadData[i];
+             if (payloadLength!=4){
+             Serial.print("<case 5>");
+             Serial.print("\n");
+             delay(500);
+            }
             break;
           case 0x80:
             i = i + 3;
+            if (payloadLength!=4){
+             Serial.print("<case 0x80>");
+             Serial.print("\n");
+             delay(500);
+            }
             break;
           case 0x83:
-            i = i + 25;      
+            i = i + 25;  
+            if (payloadLength!=4){
+             Serial.print("<case 0x83>"); 
+             Serial.print("\n");
+             delay(500);   
+            }    
             break;
           default:
+          if (payloadLength!=4){
+             Serial.print("<case default>");
+             Serial.print("\n");
+             delay(500);
+            }
             break;
           } // switch
         } // for loop
@@ -132,7 +175,8 @@ void loop() {
           lastReceivedPacket = millis();
           Serial.print("\n");
 if(attention>50){
-forword();         
+forword(); 
+Serial.println("forward!");        
 }
 
 if(attention>10 && attention<50){
@@ -140,7 +184,8 @@ backword();
 }
 
 else{
-Stop();            
+Stop();
+Serial.println("Stop!");            
 }              
         }
 #endif        
