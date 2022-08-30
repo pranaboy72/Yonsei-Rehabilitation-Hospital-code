@@ -21,14 +21,15 @@ byte meditation = 0;
 // system variables
 long lastReceivedPacket = 0;
 boolean bigPacket = false;
-char stall;
+// char stall;
 
 int Speed = 130;  
 
 //////////////////////////
 // Microprocessor Setup //
 //////////////////////////
-void setup() {// put your setup code here, to run once
+void setup() {
+  // put your setup code here, to run once
   motor_L.setSpeed(200);
   motor_L.run(RELEASE);
   motor_R.setSpeed(200);
@@ -36,7 +37,8 @@ void setup() {// put your setup code here, to run once
   
   pinMode(LED, OUTPUT); 
   BT.begin(BAUDRATE);
-  Serial.begin(BAUDRATE);           // USB
+  Serial.begin(BAUDRATE);          
+  // USB
 }
 
 ////////////////////////////////
@@ -49,9 +51,9 @@ byte ReadOneByte()
   while(!BT.available());
   ByteRead = BT.read();
 
-#if DEBUGOUTPUT  
+  #if DEBUGOUTPUT  
   Serial.print((char)ByteRead);   // echo the same byte out the USB serial (for debug purposes)
-#endif
+  #endif
 
   return ByteRead;
 }
@@ -60,27 +62,25 @@ byte ReadOneByte()
 //MAIN LOOP//
 /////////////
 void loop() {
-  stall = Serial.read();
-  if (stall == 'c')  Stop();
+  //   stall = Serial.read();
+  //   if (stall == 'c')  Stop();
   // Look for sync bytes
-  if(ReadOneByte() == 170) 
-  {
-    if(ReadOneByte() == 170) 
-    {
+  if(ReadOneByte() == 170){
+    if(ReadOneByte() == 170){
         payloadLength = ReadOneByte();
         if (payloadLength!=4){
-        Serial.print("payloadLength:");
-        Serial.println(payloadLength);
-        delay(500);
-      }
+          Serial.print("payloadLength:");
+          Serial.println(payloadLength);
+          delay(500);
+        }
       
         if(payloadLength > 169)                      //Payload length can not be greater than 169
         return;
+      
         generatedChecksum = 0;        
-        for(int i = 0; i < payloadLength; i++) 
-        {  
-        payloadData[i] = ReadOneByte();            //Read payload into memory
-        generatedChecksum += payloadData[i];
+        for(int i = 0; i < payloadLength; i++){  
+          payloadData[i] = ReadOneByte();            //Read payload into memory
+          generatedChecksum += payloadData[i];
         }   
 
         checksum = ReadOneByte();                      //Read checksum byte from stream      
@@ -174,20 +174,23 @@ void loop() {
           Serial.print(millis() - lastReceivedPacket, DEC);
           lastReceivedPacket = millis();
           Serial.print("\n");
-if(attention>50){
-forword(); 
-Serial.println("forward!");        
-}
-
-if(attention>10 && attention<50){
-backword();
-}
-
-else{
-Stop();
-Serial.println("Stop!");            
-}              
+          delay(1000);
         }
+        
+        if(attention>50){
+        forword(); 
+        Serial.println("forward!");        
+        }
+
+        if(attention>10 && attention<50){
+        backword();
+        }
+
+        else{
+        Stop();
+        Serial.println("Stop!");            
+        }              
+        
 #endif        
         bigPacket = false;        
       }
@@ -203,17 +206,17 @@ Serial.println("Stop!");
 void forword(){  //forword
   motor_L.run(FORWARD);
   motor_R.run(FORWARD);
-  delay(2000);
+  delay(1000);
 }
 
 void backword(){ //backword
   motor_L.run(BACKWARD);
   motor_R.run(BACKWARD);
-  delay(2000);
+  delay(1000);
 }
 
 void Stop(){ //stop
   motor_L.run(RELEASE);
   motor_R.run(RELEASE);
-  delay(2000);
+  delay(1000);
 }
