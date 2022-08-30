@@ -1,4 +1,4 @@
-# Yonsei-Rehabilitation-Hospital-code
+# Wheel chair backside detector
 
 ## Raspberrypi4 Access route
 putty: 10.241.29.108 or raspberrypi.local
@@ -24,3 +24,11 @@ on the terminal
 
 ## Nano Editor 
 sudo nano /etc/profile
+
+
+# Neurosky Mindwave Detect & Control RC Car
+
+## Access to Arduino Uno via Linux
+'''
+sudo chmod a+rw /dev/ttyACM0
+'''
