@@ -29,6 +29,16 @@ sudo nano /etc/profile
 # Neurosky Mindwave Detect & Control RC Car
 
 ## Access to Arduino Uno via Linux
-'''
+```
 sudo chmod a+rw /dev/ttyACM0
-'''
+```
+   
+## AT
+Set your Arduino Uno into AT mode
+
+## Mindwave Debug
+Just for debugging whether your mindwave2 and Arduino Uno work well
+
+## Mindwave RcCar Test
+Our Main Code : Using brainwave attention & meditation level to control Rc Car
+
