@@ -42,6 +42,6 @@ Just for debugging whether your mindwave2 and Arduino Uno work well
 ## Mindwave RcCar Test
 Our Main Code : Using brainwave attention & meditation level to control Rc Car
 
-## Electro Magnet
+# Electro Magnet
 We made a module that can control any joysticks with electro-magnet.   
 It controls joystick by pressing buttons
