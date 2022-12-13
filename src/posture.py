@@ -1,6 +1,8 @@
 import cv2
 import mediapipe as mp
 import numpy as np
+import winsound as ws
+
 mp_drawing = mp.solutions.drawing_utils
 mp_pose = mp.solutions.pose
 
@@ -16,6 +18,13 @@ def calculate_dis(a,b):
     #     angle = 360-angle
         
     return distance
+
+def beepsound():
+    freq = 2000
+    dur = 1000
+    ws.Beep(freq, dur)
+
+
 
 #path = "C:\\Users\\Junwoo.DESKTOP-0U9P69P\\Videos\\iVCam"
 #path = 'rtsp:/10.241.29.197/1/h264major'
@@ -62,10 +71,11 @@ with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as 
             #                     )
             
             # Curl counter logic
-            if distance > 0.11:
+            if distance > 0.14:
                 stage = "Okay"
             else:
                 stage="Up!!!!!!"
+                print(beepsound())
                 counter +=1
                 # print(counter)
                        
