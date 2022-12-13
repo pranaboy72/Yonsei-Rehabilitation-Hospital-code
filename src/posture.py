@@ -7,17 +7,20 @@ mp_pose = mp.solutions.pose
 def calculate_dis(a,b):
     a = np.array(a) # Shoulder
     b = np.array(b) # mouth
-    
+    #print(a.type)
     # radians = np.arctan2(c[1]-b[1], c[0]-b[0]) - np.arctan2(a[1]-b[1], a[0]-b[0])
     # angle = np.abs(radians*180.0/np.pi)
-    distance = np.sqrt((a[0]-b[0])**2 + (a[1]-b[1])**2)
+    distance = b[1]-a[1]
     print(distance)
     # if angle >180.0:
     #     angle = 360-angle
         
     return distance
 
-cap = cv2.VideoCapture(0)
+#path = "C:\\Users\\Junwoo.DESKTOP-0U9P69P\\Videos\\iVCam"
+#path = 'rtsp:/10.241.29.197/1/h264major'
+
+cap = cv2.VideoCapture(1)
 
 # Curl counter variables
 counter = 0 
@@ -50,7 +53,7 @@ with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as 
             #wrist = [landmarks[mp_pose.PoseLandmark.LEFT_WRIST.value].x,landmarks[mp_pose.PoseLandmark.LEFT_WRIST.value].y]
             
             # Calculate angle
-            distance = calculate_dis(shoulder, mouth)
+            distance = abs(calculate_dis(shoulder, mouth))
             
             # Visualize angle
             # cv2.putText(image, str(distance), 
@@ -59,7 +62,7 @@ with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as 
             #                     )
             
             # Curl counter logic
-            if distance > 0.23:
+            if distance > 0.11:
                 stage = "Okay"
             else:
                 stage="Up!!!!!!"
