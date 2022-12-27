@@ -2,13 +2,12 @@ import cv2
 import mediapipe as mp
 import numpy as np
 import winsound as ws
-from itertools import count
 import matplotlib.pyplot as plt
-from matplotlib.animation import FuncAnimation
 from time import perf_counter
 
 mp_drawing = mp.solutions.drawing_utils
 mp_pose = mp.solutions.pose
+
 
 def f_length(a, b):
     a = np.array(a)
@@ -17,12 +16,14 @@ def f_length(a, b):
 
     return length
 
+
 def f_height(a):
     a = np.array(a)
 
     height = a[1]
 
     return height
+
 
 def f_distance(a, b):  # shoulder, mouth
     a = np.array(a)  # Shoulder
@@ -76,7 +77,7 @@ graph_time = []
 graph_neck = []
 graph_waist = []
 
-## Setup mediapipe instance
+# Setup mediapipe instance
 with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as pose:
     while cap.isOpened():
         print(i)
@@ -105,15 +106,15 @@ with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as 
             # Get coordinates
 
             shoulder_l = [landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value].x,
-                        landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value].y]
+                          landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value].y]
             shoulder_r = [landmarks[mp_pose.PoseLandmark.RIGHT_SHOULDER.value].x,
                           landmarks[mp_pose.PoseLandmark.RIGHT_SHOULDER.value].y]
             shoulder = [(shoulder_l[0]+shoulder_r[0])/2, (shoulder_l[1]+shoulder_r[1]) / 2]
 
             eye_l = [landmarks[mp_pose.PoseLandmark.LEFT_EYE.value].x,
-                          landmarks[mp_pose.PoseLandmark.LEFT_EYE.value].y]
+                     landmarks[mp_pose.PoseLandmark.LEFT_EYE.value].y]
             eye_r = [landmarks[mp_pose.PoseLandmark.RIGHT_EYE.value].x,
-                          landmarks[mp_pose.PoseLandmark.RIGHT_EYE.value].y]
+                     landmarks[mp_pose.PoseLandmark.RIGHT_EYE.value].y]
             eye = [(eye_l[0] + eye_r[0]) / 2, (eye_l[1] + eye_r[1]) / 2]
 
             # Calculate angle
@@ -163,10 +164,10 @@ with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as 
                     counter_waist += 1
                     check_waist = 1
 
-
             graph_time.append(during_time)
             graph_neck.append(check_neck)
             graph_waist.append(check_waist)
+
         except:
             pass
 
@@ -205,7 +206,7 @@ with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as 
         print(f"WAIST: {(height_sho - height_ref) / length_sho}")
 
         if cv2.waitKey(10) & 0xFF == ord('q'):
-            fig = plt.figure("Posture Analysis", figsize = (12, 4))
+            fig = plt.figure("Posture Analysis", figsize=(12, 4))
             plt.yticks([0, 1, 2], labels=["Correct", "Waist", "Neck"])
             plt.xlabel("Time[s]")
             plt.ylabel("Posture")
