@@ -45,3 +45,9 @@ Our Main Code : Using brainwave attention & meditation level to control Rc Car
 # Electro Magnet
 We made a module that can control any joysticks with electro-magnet.   
 It controls joystick by pressing buttons
+
+
+# Posture
+copy & paste mediapipe in the same file,
+use pyinstaller to make an exe file
+if mediapipe error pops out, refer to https://stackoverflow.com/questions/67887088/issues-compiling-mediapipe-with-pyinstaller-on-macos
