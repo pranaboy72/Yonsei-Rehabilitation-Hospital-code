@@ -2,6 +2,10 @@ import cv2
 import mediapipe as mp
 import numpy as np
 import winsound as ws
+from itertools import count
+import matplotlib.pyplot as plt
+from matplotlib.animation import FuncAnimation
+from time import perf_counter
 
 mp_drawing = mp.solutions.drawing_utils
 mp_pose = mp.solutions.pose
@@ -58,16 +62,27 @@ def beepsound2():
 cap = cv2.VideoCapture(0)  # To use ivcam, use cv2.VideoCapture(1)
 
 # Curl counter variables
-counter = 0
+counter_neck = 0
+counter_waist = 0
 i = 0
-stage = None
+count_posture_ref = 50
+irr_height_ref = []
+irr_distance_ref = []
 
+stage = None
+start_time = perf_counter()
+
+graph_time = []
+graph_neck = []
+graph_waist = []
 
 ## Setup mediapipe instance
 with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as pose:
     while cap.isOpened():
         print(i)
         i += 1
+        end_time = perf_counter()
+        during_time = (end_time - start_time)
         ret, frame = cap.read()
 
         # Recolor image to RGB
@@ -82,6 +97,8 @@ with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as 
         image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
         # Extract landmarks
+        stage1 = "okay"
+        stage2 = "okay"
         try:
             landmarks = results.pose_landmarks.landmark
 
@@ -104,29 +121,52 @@ with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as 
             distance_sho_to_eye = abs(f_distance(shoulder, eye))
             height_sho = abs(f_height(shoulder))
 
+            if i < count_posture_ref:
+                irr_height_ref.append(height_sho)
+                irr_distance_ref.append(distance_sho_to_eye)
+
+            height_ref = np.median(irr_height_ref)
+            distance_ref = np.median(irr_distance_ref)
+
             # Visualize angle
             # cv2.putText(image, str(distance),
             #                tuple(np.multiply(elbow, [640, 480]).astype(int)),
             #                cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2, cv2.LINE_AA
             #                     )
 
+            check_neck = 0
+            check_waist = 0
+
             # Curl counter logic
-            if distance_sho_to_eye / length_sho > 0.72:
-                stage1 = "Okay"
+            if i < count_posture_ref:
+                stage1 = "take the right posture.."
             else:
-                stage1 = "Up!!"
-                print(beepsound1())
-                counter += 1
-                # print(counter)
+                if (distance_ref - distance_sho_to_eye) / length_sho < 0.05:
+                    stage1 = "Okay"
+                else:
+                    stage1 = "Up!!"
+                    print(beepsound1())
+                    counter_neck += 1
+                    check_neck = 2
+                    # print(counter)
 
-            if height_sho / length_sho > 1.5:
-                stage2 = "Okay"
-
+            if i < count_posture_ref:
+                stage2 = "take the right posture.."
             else:
-                stage2 = "Up!!"
-                print(beepsound2())
-                counter += 1
+                if (height_sho - height_ref) / length_sho < 0.03:
+                    stage2 = "Okay"
+                # 왼쪽 위 끝점을 원점으로 생각 / height는 원점으로 부터 y축 방향의 거리
 
+                else:
+                    stage2 = "Up!!"
+                    print(beepsound2())
+                    counter_waist += 1
+                    check_waist = 1
+
+
+            graph_time.append(during_time)
+            graph_neck.append(check_neck)
+            graph_waist.append(check_waist)
         except:
             pass
 
@@ -160,11 +200,18 @@ with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as 
                                   mp_drawing.DrawingSpec(color=(245, 66, 230), thickness=2, circle_radius=2)
                                   )
 
-        cv2.imshow('Mediapipe Feed', image)
-        print(f"NECK: {distance_sho_to_eye / length_sho}")
-        print(f"WAIST: {height_sho / length_sho}")
+        cv2.imshow('Posture Estimation', image)
+        print(f"NECK: {(distance_ref - distance_sho_to_eye) / length_sho}")
+        print(f"WAIST: {(height_sho - height_ref) / length_sho}")
 
         if cv2.waitKey(10) & 0xFF == ord('q'):
+            fig = plt.figure("Posture Analysis", figsize = (12, 4))
+            plt.yticks([0, 1, 2], labels=["Correct", "Waist", "Neck"])
+            plt.xlabel("Time[s]")
+            plt.ylabel("Posture")
+            plt.scatter(graph_time, graph_neck, color='red', alpha=0.3)
+            plt.scatter(graph_time, graph_waist, color='blue', alpha=0.3)
+            plt.show()
             break
 
     cap.release()
