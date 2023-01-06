@@ -60,15 +60,13 @@ def beepsound2():
     ws.Beep(freq, dur)
 
 
-cap = cv2.VideoCapture(4)  # To use ivcam, use cv2.VideoCapture(1)
+cap = cv2.VideoCapture(0)  # To use ivcam, use cv2.VideoCapture(1)
 
 # Curl counter variables
 counter_neck = 0
 counter_waist = 0
-i = 0
 count_posture_ref = 50
-irr_height_ref = []
-irr_distance_ref = []
+i = count_posture_ref +1
 
 stage = None
 start_time = perf_counter()
@@ -78,12 +76,12 @@ graph_neck = []
 graph_waist = []
 
 start = 0
+flag = 0
 
 # Setup mediapipe instance
 with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as pose:
     while cap.isOpened():
         #print(i)
-        i += 1
                 
         end_time = perf_counter()
         during_time = (end_time - start_time)
@@ -125,19 +123,24 @@ with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as 
         distance_sho_to_eye = abs(f_distance(shoulder, eye))
         height_sho = abs(f_height(shoulder))
 
-        key = cv2.waitKey(1)
-        if key == ord('w'):
-            while i < count_posture_ref:
-                irr_height_ref.append(height_sho)
-                irr_distance_ref.append(distance_sho_to_eye)
 
-                height_ref = np.median(irr_height_ref)
-                distance_ref = np.median(irr_distance_ref)
-            i = 0
+        if cv2.waitKey(1) & 0xFF == ord('w'):
+            i=0
+            irr_height_ref = []
+            irr_distance_ref = []
+
+        if i < count_posture_ref:
+            i += 1
+            irr_height_ref.append(height_sho)
+            irr_distance_ref.append(distance_sho_to_eye)
+
+        if i == count_posture_ref:
+            height_ref = np.median(irr_height_ref)
+            distance_ref = np.median(irr_distance_ref)
+            i = count_posture_ref + 1
             start = 1
                     
         if start > 0:
-            start = 0
             # Visualize angle
             # cv2.putText(image, str(distance),
             #                tuple(np.multiply(elbow, [640, 480]).astype(int)),
@@ -151,30 +154,30 @@ with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as 
             print(f"WAIST: {(height_sho - height_ref) / length_sho}")
 
             # Curl counter logic
-            # if i < count_posture_ref:
-            #     stage1 = "take the right posture.."
-            # else:
-            if (distance_ref - distance_sho_to_eye) / length_sho < 0.2:
-                stage1 = "Okay"
+            if i < count_posture_ref:
+                stage1 = "take the right posture.."
             else:
-                stage1 = "Up!!"
-                print(beepsound1())
-                counter_neck += 1
-                check_neck = 2
-                    # print(counter)
+                if (distance_ref - distance_sho_to_eye) / length_sho < 0.2:
+                    stage1 = "Okay"
+                else:
+                    stage1 = "Up!!"
+                    print(beepsound1())
+                    counter_neck += 1
+                    check_neck = 2
+                        # print(counter)
 
-            # if i < count_posture_ref:
-            #     stage2 = "take the right posture.."
-            # else:
-            if (height_sho - height_ref) / length_sho < 0.03:
-                stage2 = "Okay"
-            # 왼쪽 위 끝점을 원점으로 생각 / height는 원점으로 부터 y축 방향의 거리
-
+            if i < count_posture_ref:
+                stage2 = "take the right posture.."
             else:
-                stage2 = "Up!!"
-                print(beepsound2())
-                counter_waist += 1
-                check_waist = 1
+                if (height_sho - height_ref) / length_sho < 0.03:
+                    stage2 = "Okay"
+                # 왼쪽 위 끝점을 원점으로 생각 / height는 원점으로 부터 y축 방향의 거리
+
+                else:
+                    stage2 = "Up!!"
+                    print(beepsound2())
+                    counter_waist += 1
+                    check_waist = 1
 
             graph_time.append(during_time)
             graph_neck.append(check_neck)
