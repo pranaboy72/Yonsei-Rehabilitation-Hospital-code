@@ -60,7 +60,7 @@ def beepsound2():
 
 
 
-cap = cv2.VideoCapture(0)  # To use ivcam, use cv2.VideoCapture(1)
+cap = cv2.VideoCapture(3)  # To use ivcam, use cv2.VideoCapture(1)
 
 # Curl counter variables
 distance_ref = 0
@@ -83,132 +83,135 @@ flag = 0
 # Setup mediapipe instance
 with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as pose:
     while cap.isOpened():
-        # print(i)
+        try:
+            # print(i)
 
-        end_time = perf_counter()
-        during_time = (end_time - start_time)
-        ret, frame = cap.read()
+            end_time = perf_counter()
+            during_time = (end_time - start_time)
+            ret, frame = cap.read()
 
-        # Recolor image to RGB
-        image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        image.flags.writeable = False
+            # Recolor image to RGB
+            image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            image.flags.writeable = False
 
-        # Make detection
-        results = pose.process(image)
+            # Make detection
+            results = pose.process(image)
 
-        # Recolor back to BGR
-        image.flags.writeable = True
-        image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+            # Recolor back to BGR
+            image.flags.writeable = True
+            image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
-        # Extract landmarks
-        stage1 = "okay"
-        stage2 = "okay"
+            # Extract landmarks
+            stage1 = "okay"
+            stage2 = "okay"
 
-        landmarks = results.pose_landmarks.landmark
+            landmarks = results.pose_landmarks.landmark
 
-        # Get coordinates
+            # Get coordinates
 
-        shoulder_l = [landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value].x,
-                      landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value].y]
-        shoulder_r = [landmarks[mp_pose.PoseLandmark.RIGHT_SHOULDER.value].x,
-                      landmarks[mp_pose.PoseLandmark.RIGHT_SHOULDER.value].y]
-        shoulder = [(shoulder_l[0] + shoulder_r[0]) / 2, (shoulder_l[1] + shoulder_r[1]) / 2]
+            shoulder_l = [landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value].x,
+                        landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value].y]
+            shoulder_r = [landmarks[mp_pose.PoseLandmark.RIGHT_SHOULDER.value].x,
+                        landmarks[mp_pose.PoseLandmark.RIGHT_SHOULDER.value].y]
+            shoulder = [(shoulder_l[0] + shoulder_r[0]) / 2, (shoulder_l[1] + shoulder_r[1]) / 2]
 
-        eye_l = [landmarks[mp_pose.PoseLandmark.LEFT_EYE.value].x,
-                 landmarks[mp_pose.PoseLandmark.LEFT_EYE.value].y]
-        eye_r = [landmarks[mp_pose.PoseLandmark.RIGHT_EYE.value].x,
-                 landmarks[mp_pose.PoseLandmark.RIGHT_EYE.value].y]
-        eye = [(eye_l[0] + eye_r[0]) / 2, (eye_l[1] + eye_r[1]) / 2]
+            eye_l = [landmarks[mp_pose.PoseLandmark.LEFT_EYE.value].x,
+                    landmarks[mp_pose.PoseLandmark.LEFT_EYE.value].y]
+            eye_r = [landmarks[mp_pose.PoseLandmark.RIGHT_EYE.value].x,
+                    landmarks[mp_pose.PoseLandmark.RIGHT_EYE.value].y]
+            eye = [(eye_l[0] + eye_r[0]) / 2, (eye_l[1] + eye_r[1]) / 2]
 
-        # Calculate angle
-        length_sho = abs(f_length(shoulder_l, shoulder_r))
-        distance_sho_to_eye = abs(f_distance(shoulder, eye))
-        height_sho = abs(f_height(shoulder))
+            # Calculate angle
+            length_sho = abs(f_length(shoulder_l, shoulder_r))
+            distance_sho_to_eye = abs(f_distance(shoulder, eye))
+            height_sho = abs(f_height(shoulder))
 
-        if cv2.waitKey(1) & 0xFF == ord('w'):
-            i = 0
-            irr_height_ref = []
-            irr_distance_ref = []
+            if cv2.waitKey(1) & 0xFF == ord('w'):
+                i = 0
+                irr_height_ref = []
+                irr_distance_ref = []
 
-        if i < count_posture_ref:
-            i += 1
-            irr_height_ref.append(height_sho)
-            irr_distance_ref.append(distance_sho_to_eye)
+            if i < count_posture_ref:
+                i += 1
+                irr_height_ref.append(height_sho)
+                irr_distance_ref.append(distance_sho_to_eye)
 
-        if i == count_posture_ref:
-            height_ref = np.median(irr_height_ref)
-            distance_ref = np.median(irr_distance_ref)
-            i = count_posture_ref + 1
-            start = 1
+            if i == count_posture_ref:
+                height_ref = np.median(irr_height_ref)
+                distance_ref = np.median(irr_distance_ref)
+                i = count_posture_ref + 1
+                start = 1
 
-        check_neck = 0
-        check_waist = 0
+            check_neck = 0
+            check_waist = 0
 
-        # Curl counter logic
-        if i < count_posture_ref:
-            stage1 = "take the right posture.."
-        else:
-            if (distance_ref - distance_sho_to_eye) / length_sho < 0.2:
-                stage1 = "Okay"
+            # Curl counter logic
+            if i < count_posture_ref:
+                stage1 = "take the right posture.."
             else:
-                stage1 = "Up!!"
-                print(beepsound1())
-                counter_neck += 1
-                check_neck = 2
-                # print(counter)
+                if (distance_ref - distance_sho_to_eye) / length_sho < 0.2:
+                    stage1 = "Okay"
+                else:
+                    stage1 = "Up!!"
+                    print(beepsound1())
+                    counter_neck += 1
+                    check_neck = 2
+                    # print(counter)
 
-        if i < count_posture_ref:
-            stage2 = "take the right posture.."
-        else:
-            if (height_sho - height_ref) / length_sho < 0.2:
-                stage2 = "Okay"
-            # 왼쪽 위 끝점을 원점으로 생각 / height는 원점으로 부터 y축 방향의 거리
-
+            if i < count_posture_ref:
+                stage2 = "take the right posture.."
             else:
-                stage2 = "Up!!"
-                print(beepsound2())
-                counter_waist += 1
-                check_waist = 1
-        print(f'neck : {(distance_ref - distance_sho_to_eye) / length_sho}')
-        print(f'waist : {(height_sho - height_ref) / length_sho}')
-        graph_time.append(during_time)
-        graph_neck.append(check_neck)
-        graph_waist.append(check_waist)
+                if (height_sho - height_ref) / length_sho < 0.2:
+                    stage2 = "Okay"
+                # 왼쪽 위 끝점을 원점으로 생각 / height는 원점으로 부터 y축 방향의 거리
 
-        # Render curl counter
-        # Setup status box
-        cv2.rectangle(image, (0, 0), (225, 73), (245, 117, 16), -1)
-        cv2.rectangle(image, (0, 73), (225, 155), (245, 117, 16), -1)
+                else:
+                    stage2 = "Up!!"
+                    print(beepsound2())
+                    counter_waist += 1
+                    check_waist = 1
+            print(f'neck : {(distance_ref - distance_sho_to_eye) / length_sho}')
+            print(f'waist : {(height_sho - height_ref) / length_sho}')
+            graph_time.append(during_time)
+            graph_neck.append(check_neck)
+            graph_waist.append(check_waist)
 
-        # # Stage data
-        cv2.putText(image, 'NECK', (10, 12),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 1, cv2.LINE_AA)
-        cv2.putText(image, stage1,
-                    (10, 60),
-                    cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 255, 255), 2, cv2.LINE_AA)
-        cv2.putText(image, 'WAIST', (10, 85),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 1, cv2.LINE_AA)
-        cv2.putText(image, stage2,
-                    (10, 143),
-                    cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 255, 255), 2, cv2.LINE_AA)
+            # Render curl counter
+            # Setup status box
+            cv2.rectangle(image, (0, 0), (225, 73), (245, 117, 16), -1)
+            cv2.rectangle(image, (0, 73), (225, 155), (245, 117, 16), -1)
 
-        # Render detections
-        mp_drawing.draw_landmarks(image, results.pose_landmarks, mp_pose.POSE_CONNECTIONS,
-                                  mp_drawing.DrawingSpec(color=(245, 117, 66), thickness=2, circle_radius=2),
-                                  mp_drawing.DrawingSpec(color=(245, 66, 230), thickness=2, circle_radius=2)
-                                  )
+            # # Stage data
+            cv2.putText(image, 'NECK', (10, 12),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 1, cv2.LINE_AA)
+            cv2.putText(image, stage1,
+                        (10, 60),
+                        cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 255, 255), 2, cv2.LINE_AA)
+            cv2.putText(image, 'WAIST', (10, 85),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 1, cv2.LINE_AA)
+            cv2.putText(image, stage2,
+                        (10, 143),
+                        cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 255, 255), 2, cv2.LINE_AA)
 
-        cv2.imshow('Posture Estimation', image)
+            # Render detections
+            mp_drawing.draw_landmarks(image, results.pose_landmarks, mp_pose.POSE_CONNECTIONS,
+                                    mp_drawing.DrawingSpec(color=(245, 117, 66), thickness=2, circle_radius=2),
+                                    mp_drawing.DrawingSpec(color=(245, 66, 230), thickness=2, circle_radius=2)
+                                    )
 
-        if cv2.waitKey(10) & 0xFF == ord('q'):
-            fig = plt.figure("Posture Analysis", figsize=(12, 4))
-            plt.yticks([0, 1, 2], labels=["Correct", "Waist", "Neck"])
-            plt.xlabel("Time[s]")
-            plt.ylabel("Posture")
-            plt.scatter(graph_time, graph_neck, color='red', alpha=0.3)
-            plt.scatter(graph_time, graph_waist, color='blue', alpha=0.3)
-            plt.show()
-            break
+            cv2.imshow('Posture Estimation', image)
+
+            if cv2.waitKey(10) & 0xFF == ord('q'):
+                fig = plt.figure("Posture Analysis", figsize=(12, 4))
+                plt.yticks([0, 1, 2], labels=["Correct", "Waist", "Neck"])
+                plt.xlabel("Time[s]")
+                plt.ylabel("Posture")
+                plt.scatter(graph_time, graph_neck, color='red', alpha=0.3)
+                plt.scatter(graph_time, graph_waist, color='blue', alpha=0.3)
+                plt.show()
+                break
+        except:
+            pass
 
     cap.release()
     cv2.destroyAllWindows()
